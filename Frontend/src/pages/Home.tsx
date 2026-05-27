@@ -4,7 +4,7 @@ import HomeContent from '../contents/HomeContent';
 export default function Home() {
   return (
     <div>
-      <Header /> <br />
+      <Header /> <br /> <br />
       <HomeContent />
       <Footer />
     </div>
