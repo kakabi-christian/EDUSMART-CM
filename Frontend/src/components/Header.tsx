@@ -26,7 +26,6 @@ const Header: React.FC = () => {
           <li><Link to="/" className="nav-item">Accueil</Link></li>
           <li><Link to="/about" className="nav-item">À propos</Link></li>
           <li><Link to="/how-it-work" className="nav-item">Comment ça marche</Link></li>
-          {/* <li><Link to="/annonces" className="nav-item">Annonces</Link></li> */}
         </ul>
 
         <div className="nav-cta">
