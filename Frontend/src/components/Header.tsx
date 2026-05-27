@@ -69,7 +69,6 @@ const Header: React.FC = () => {
         </ul>
         <div className="mobile-cta">
           <Link to="/login" className="btn-mobile-secondary" onClick={() => setMenuOpen(false)}>Connexion</Link>
-          <Link to="/register" className="btn-mobile-primary" onClick={() => setMenuOpen(false)}>S'inscrire gratuitement</Link>
         </div>
       </div>
     </header>
