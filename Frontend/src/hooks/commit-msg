@@ -1,0 +1,78 @@
+#!/bin/bash
+#==========================================================================
+# Hook commit-msg EDUSMART-CM — NEXATEC SOLUTIONS
+# Vérifie que le message respecte la norme : <type>(<scope>): <description>
+# Équipe : KAKABI Christian · DONKENG Caroline · NYEM Dimitri
+#==========================================================================
+
+MESSAGE=$(cat "$1")
+
+# 1. Ignorer les messages de merge automatique
+if echo "$MESSAGE" | grep -q "^Merge"; then
+    exit 0
+fi
+
+# 2. Définition du pattern Regex (Conventional Commits)
+PATTERN="^(feat|fix|docs|test|style|chore|refactor|perf|ci|build|revert)(\([a-zA-Z0-9_-]+\))?: .{1,100}$"
+
+# 3. Scopes valides pour EDUSMART-CM
+VALID_SCOPES="admin|enseignant|parent|auth|api|ui|db|pwa|sync|cicd|tests|docs|security|bulletins|notes|absences|messagerie|edt|eleves|dashboard"
+
+# 4. Vérification de la conformité du format
+if ! echo "$MESSAGE" | grep -qE "$PATTERN"; then
+    echo ""
+    echo "╔══════════════════════════════════════════════════════════════╗"
+    echo "║      ❌  EDUSMART-CM — Commit non conforme !                ║"
+    echo "╚══════════════════════════════════════════════════════════════╝"
+    echo ""
+    echo "  Format attendu  : <type>(<scope>): <description>"
+    echo ""
+    echo "  Types autorisés :"
+    echo "    feat      → Nouvelle fonctionnalité"
+    echo "    fix       → Correction de bug"
+    echo "    docs      → Documentation (Swagger, README, CR)"
+    echo "    test      → Ajout ou modification de tests"
+    echo "    style     → Mise en forme (CSS, espaces, lint)"
+    echo "    chore     → Tâche technique (config, dépendances)"
+    echo "    refactor  → Refactoring sans ajout de fonctionnalité"
+    echo "    perf      → Optimisation performance (3G, PWA)"
+    echo "    ci        → Pipeline CI/CD GitHub Actions"
+    echo "    build     → Système de build ou déploiement VPS"
+    echo "    revert    → Annulation d'un commit précédent"
+    echo ""
+    echo "  Scopes du projet EDUSMART-CM :"
+    echo "    admin · enseignant · parent · auth · api · ui · db"
+    echo "    pwa · sync · cicd · tests · docs · security"
+    echo "    bulletins · notes · absences · messagerie · edt"
+    echo "    eleves · dashboard"
+    echo ""
+    echo "  Exemples valides :"
+    echo "    feat(admin): ajout de la génération automatique des bulletins PDF"
+    echo "    fix(sync): résolution du conflit offline/online sur la saisie de notes"
+    echo "    feat(pwa): implémentation Service Worker IndexedDB offline-first"
+    echo "    feat(auth): mise en place 2FA OTP SMS pour chefs d'établissement"
+    echo "    test(api): couverture unitaire API élèves portail admin ≥ 80%"
+    echo "    ci(cicd): configuration pipeline GitHub Actions → VPS Afrique du Sud"
+    echo "    docs(api): documentation Swagger endpoints portail enseignant"
+    echo "    perf(ui): optimisation chargement < 500Ko première charge 3G"
+    echo ""
+    exit 1
+fi
+
+# 5. Vérification optionnelle du scope (avertissement non bloquant)
+SCOPE=$(echo "$MESSAGE" | grep -oP '(?<=\().*(?=\))')
+if [ -n "$SCOPE" ] && ! echo "$SCOPE" | grep -qE "^($VALID_SCOPES)$"; then
+    echo ""
+    echo "  ⚠️  [EDUSMART-CM] Scope inconnu : '$SCOPE'"
+    echo "  Scopes recommandés : admin · enseignant · parent · auth · api"
+    echo "  · ui · db · pwa · sync · cicd · tests · docs · security"
+    echo "  · bulletins · notes · absences · messagerie · edt · eleves · dashboard"
+    echo "  (commit accepté mais vérifiez le scope)"
+    echo ""
+fi
+
+echo ""
+echo "  ✅  [EDUSMART-CM] Commit conforme — Bonne continuation !"
+echo "      Projet : EDUSMART-CM · NEXATEC SOLUTIONS SARL"
+echo ""
+exit 0
