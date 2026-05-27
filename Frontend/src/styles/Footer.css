@@ -1,0 +1,173 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Footer EDUSMART-CM — Plateforme de Gestion Scolaire
+   Thème : Éducation · Excellence · Cameroun
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.footer-container {
+    background-color: rgb(7, 25, 44);
+    color: var(--white);
+    padding-top: 20px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    border-top: 3px solid var(--green);
+    position: relative;
+}
+
+.footer-brand {
+    font-family: 'Syne', 'Inter', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+}
+
+.footer-description {
+    color: var(--white);
+    font-size: 0.85rem;
+    max-width: 320px;
+    line-height: 1.6;
+    opacity: 0.85;
+}
+
+.footer-title {
+    color: var(--yellow);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.footer-links li {
+    margin-bottom: 8px;
+    transition: transform 0.2s ease;
+}
+
+.footer-links li:hover {
+    transform: translateX(4px);
+}
+
+.footer-links a {
+    color: var(--white);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+    opacity: 0.75;
+}
+
+.footer-links a:hover {
+    color: var(--green);
+    opacity: 1;
+}
+
+/* Liens sociaux */
+.social-links a {
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.social-links a:hover {
+    transform: translateY(-3px) scale(1.1);
+    filter: brightness(1.2);
+}
+
+.hover-scale {
+    transition: transform 0.3s ease;
+}
+
+.hover-scale:hover {
+    transform: scale(1.15);
+}
+
+/* Effet hover pour les liens */
+.hover-edu-green:hover {
+    color: var(--green) !important;
+    opacity: 1 !important;
+}
+
+/* Divider stylé */
+.divider-edu {
+    border: none;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--green), var(--yellow), var(--red), transparent);
+    opacity: 0.35;
+    margin: 1.5rem 0;
+}
+
+.footer-bottom {
+    color: var(--white);
+    font-size: 0.75rem;
+    opacity: 0.8;
+}
+
+.footer-bottom a {
+    color: var(--white);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-bottom a:hover {
+    color: var(--green);
+}
+
+/* ---- Responsive (Mobile) ---- */
+@media (max-width: 768px) {
+    .footer-container {
+        text-align: center;
+        padding-top: 15px;
+        padding-bottom: 10px;
+    }
+
+    .footer-brand {
+        font-size: 1.2rem;
+        margin-bottom: 5px;
+    }
+
+    .footer-description {
+        margin: 0 auto 10px auto;
+        font-size: 0.8rem;
+        max-width: 250px;
+    }
+
+    .footer-title {
+        font-size: 0.85rem;
+        margin-top: 15px;
+        margin-bottom: 8px;
+    }
+
+    .footer-links li {
+        margin-bottom: 4px;
+    }
+
+    .social-links {
+        justify-content: center;
+        margin-bottom: 10px;
+        gap: 8px;
+    }
+
+    .social-icon {
+        width: 28px;
+        height: 28px;
+        font-size: 0.8rem;
+    }
+
+    .footer-contact li {
+        justify-content: center;
+        display: flex;
+        margin-bottom: 5px;
+        font-size: 0.8rem;
+    }
+
+    .btn-excha-orange {
+        padding: 10px 15px;
+        font-size: 0.85rem;
+        margin-top: 10px;
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .row > div {
+        margin-bottom: 10px;
+    }
+}
+/*  */

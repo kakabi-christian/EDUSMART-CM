@@ -1,0 +1,327 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   theme.css — Palette Éducation & Emploi « CametiOn » · Édition Tech 237
+   Thème : Croissance · Ambition · Excellence Camerounaise
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+    /* ── Couleurs principales (Vert · Rouge · Jaune Officiels & Sublimés) ── */
+    --green:        #00A663;   /* Vert Lion — Tech, succès, croissance et savoir */
+    --green-dark:   #005C36;   /* Vert profond — Hover, bases de conteneurs */
+    --green-light:  #34D399;   /* Émeraude clair — Badges, lueurs positives */
+
+    --yellow:       #FFCC00;   /* Or Ambition — L'étoile, les highlights, diplômes */
+    --yellow-dark:  /* Jaune soutenu — États actifs, focus */ #D9A400;   
+    --yellow-light: #FFE066;   /* Jaune vif — Étoiles de notation, alertes douces */
+
+    --red:          #E62134;   /* Rouge Unité — Urgences, dynamisme, délais critiques */
+    --red-dark:     #B31625;   /* Rouge profond — Hover alerte, états critiques */
+    --red-light:    #FF5C6C;   /* Rouge doux — Notifications non bloquantes */
+
+    /* ── Couleurs complémentaires adaptées (Tons Tech & Terre) ───────────── */
+    --indigo:       #0A2E1E;   /* Vert Forêt profond — Headers majeurs, contrastes */
+    --indigo-mid:   #007A48;   /* Émeraude corporatif — Liens actifs, accents */
+    --indigo-light: #84E1BC;   /* Menthe pastel — Survols, états désactivés */
+
+    --teal:         #0CB492;   /* Teal équatorial — Graphiques, tags de compétences */
+    --teal-light:   #34D6B9;   /* Teal clair — Accents décoratifs */
+
+    --amber:        #FF7A00;   /* Ambre Terre — Offres d'emploi, opportunités */
+    --amber-light:  #FFB066;   /* Ambre léger — Chips, filtres de recherche */
+
+    /* ── Neutres Premium & Surfaces (Teintés pour éviter le noir pur) ────── */
+    --dark:         #0A0F0D;   /* Fond sombre absolu (Charbon avec une pointe de vert) */
+    --dark-mid:     #121A16;   /* Fond de carte / Sidebar (Style vitré pro) */
+    --white:        #F4FBF7;   /* Blanc pur rafraîchi d'une lueur émeraude */
+    --gray:         #6B7F74;   /* Texte secondaire, placeholders */
+    --gray-light:   #C2D1C9;   /* Séparateurs, bordures légères */
+
+    --card-bg:      rgba(18, 26, 22, 0.5);
+    --border:       rgba(0, 166, 99, 0.15); /* Bordure subtilement verte */
+
+    /* ── Dégradés Signature Éclat 237 ─────────────────────────────────────── */
+    /* Le dégradé principal passe maintenant d'un vert tech à un or chaleureux */
+    --gradient-primary:  linear-gradient(135deg, var(--green) 0%, var(--yellow) 100%);
+    --gradient-warm:     linear-gradient(135deg, var(--yellow) 0%, var(--red) 100%);
+    --gradient-hero:     linear-gradient(160deg, var(--indigo) 0%, var(--green-dark) 60%, var(--red-dark) 100%);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Classes utilitaires
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.bg-edu-dark        { background-color: var(--dark)        !important; color: var(--white); }
+.bg-edu-card        { background-color: var(--dark-mid)    !important; }
+.text-edu-green     { color: var(--green)                  !important; }
+.text-edu-yellow    { color: var(--yellow)                 !important; }
+.text-edu-red       { color: var(--red)                    !important; }
+.text-edu-indigo    { color: var(--indigo-mid)             !important; }
+.text-edu-teal      { color: var(--teal)                   !important; }
+.text-edu-amber     { color: var(--amber)                  !important; }
+
+.bg-edu-green-subtle  { background-color: rgba(0, 166, 99, 0.12)   !important; }
+.bg-edu-yellow-subtle { background-color: rgba(255, 204, 0, 0.12)  !important; }
+.bg-edu-red-subtle    { background-color: rgba(230, 33, 52, 0.12)   !important; }
+.bg-edu-indigo-subtle { background-color: rgba(0, 122, 72, 0.12)   !important; }
+.bg-edu-teal-subtle   { background-color: rgba(12, 180, 146, 0.12)  !important; }
+.bg-edu-amber-subtle  { background-color: rgba(255, 122, 0, 0.12)   !important; }
+
+.border-edu-green  { border-color: var(--green)      !important; }
+.border-edu-yellow { border-color: var(--yellow)     !important; }
+.border-edu-red    { border-color: var(--red)        !important; }
+.border-edu-indigo { border-color: var(--indigo-mid) !important; }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Animations utilitaires globales
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@keyframes fadeIn    { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp   { from { opacity: 0; transform: translateY(24px) scale(.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes pulseIcon { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+@keyframes popIn     { from { transform: scale(.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes shimmer   { from { background-position: -200% center; } to { background-position: 200% center; } }
+@keyframes glowPulse { 0%, 100% { box-shadow: 0 0 8px rgba(0,166,99,.3); } 50% { box-shadow: 0 0 22px rgba(0,166,99,.6); } }
+
+.animate-fade-in    { animation: fadeIn   0.18s ease; }
+.animate-slide-up   { animation: slideUp  0.22s cubic-bezier(.22,.68,0,1.2); }
+.animate-pulse-icon { animation: pulseIcon 1.5s ease-in-out infinite; }
+.animate-pop-in     { animation: popIn    0.4s cubic-bezier(.22,.68,0,1.4); }
+.animate-glow       { animation: glowPulse 2s ease-in-out infinite; }
+
+/* Texte dégradé animé (Éclat Vert-Or-Rouge discret) */
+.text-shimmer {
+    background: linear-gradient(90deg, var(--green), var(--yellow), var(--red), var(--green));
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 4s linear infinite;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Boutons
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Bouton primaire — Vert Lion (Succès, validation) */
+.btn-edu-green {
+    background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+    border: none;
+    color: white;
+    font-weight: 700;
+    letter-spacing: .03em;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 18px rgba(0, 166, 99, 0.3);
+}
+.btn-edu-green:hover {
+    background: linear-gradient(135deg, var(--green-light) 0%, var(--green) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(0, 166, 99, 0.45);
+    color: white;
+}
+
+/* Bouton secondaire — Or Lumineux (Candidature, mise en valeur) */
+.btn-edu-yellow {
+    background: linear-gradient(135deg, var(--yellow) 0%, var(--amber) 100%);
+    border: none;
+    color: var(--dark); /* Texte sombre sur fond jaune pour le contraste pro */
+    font-weight: 700;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 18px rgba(255, 204, 0, 0.25);
+}
+.btn-edu-yellow:hover {
+    background: linear-gradient(135deg, var(--yellow-light) 0%, var(--yellow) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(255, 204, 0, 0.4);
+    color: var(--dark);
+}
+
+/* Bouton alerte — Rouge Unité */
+.btn-edu-red {
+    background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
+    border: none;
+    color: white;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 18px rgba(230, 33, 52, 0.3);
+}
+.btn-edu-red:hover {
+    background: linear-gradient(135deg, var(--red-light) 0%, var(--red) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(230, 33, 52, 0.45);
+    color: white;
+}
+
+/* Bouton outline — Vert */
+.btn-edu-outline {
+    border: 2px solid var(--green);
+    color: var(--green);
+    background: transparent;
+    font-weight: 600;
+    transition: all 0.25s ease;
+}
+.btn-edu-outline:hover {
+    background: var(--green);
+    color: var(--dark);
+    box-shadow: 0 4px 16px rgba(0, 166, 99, 0.3);
+}
+
+/* Bouton outline Émeraude */
+.btn-edu-outline-indigo {
+    border: 2px solid var(--indigo-mid);
+    color: var(--indigo-mid);
+    background: transparent;
+    font-weight: 600;
+    transition: all 0.25s ease;
+}
+.btn-edu-outline-indigo:hover {
+    background: var(--indigo-mid);
+    color: white;
+    box-shadow: 0 4px 16px rgba(0, 122, 72, 0.3);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Sidebar — Tooltips (mode réduit)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.sidebar-container.collapsed .nav-link:hover::after {
+    content: attr(data-label);
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: 15px;
+    background: linear-gradient(135deg, var(--green) 0%, var(--indigo-mid) 100%);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+    z-index: 10000;
+    box-shadow: 0 4px 18px rgba(0, 166, 99, 0.25);
+    pointer-events: none;
+    letter-spacing: .02em;
+}
+
+.sidebar-container.collapsed .nav-link:hover::before {
+    content: '';
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: 7px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent var(--green) transparent transparent;
+    z-index: 10000;
+    pointer-events: none;
+}
+
+.sidebar-container.collapsed {
+    overflow: visible !important;
+}
+
+.sidebar-tooltip {
+    position: absolute;
+    left: 100%;
+    margin-left: 15px;
+    background: linear-gradient(135deg, var(--green) 0%, var(--indigo-mid) 100%);
+    color: white;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    z-index: 2000;
+    box-shadow: 0 4px 18px rgba(0, 166, 99, 0.2);
+    letter-spacing: .02em;
+}
+
+.sidebar-tooltip::before {
+    content: '';
+    position: absolute;
+    left: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-width: 6px 6px 6px 0;
+    border-style: solid;
+    border-color: transparent var(--green) transparent transparent;
+}
+
+li:hover .sidebar-tooltip,
+.logout-container:hover .sidebar-tooltip {
+    opacity: 1;
+    visibility: visible;
+    margin-left: 20px;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Composants spécifiques éducation / emploi
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Badge de compétence / certification */
+.badge-skill {
+    background: var(--bg-edu-indigo-subtle, rgba(0,122,72,.12));
+    border: 1px solid var(--indigo-mid);
+    color: var(--indigo-light);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+
+/* Badge statut emploi */
+.badge-emploi-ouvert   { background: rgba(0,166,99,.15);   color: var(--green);       border: 1px solid var(--green);      border-radius: 20px; padding: 3px 10px; font-size: .78rem; font-weight: 700; }
+.badge-emploi-urgent   { background: rgba(255,204,0,.15);  color: var(--yellow);      border: 1px solid var(--yellow);     border-radius: 20px; padding: 3px 10px; font-size: .78rem; font-weight: 700; }
+.badge-emploi-ferme    { background: rgba(230,33,52,.15);   color: var(--red-light);   border: 1px solid var(--red);        border-radius: 20px; padding: 3px 10px; font-size: .78rem; font-weight: 700; }
+
+/* Barre de progression des cours */
+.progress-edu {
+    height: 6px;
+    border-radius: 10px;
+    background: rgba(255,255,255,.08);
+    overflow: hidden;
+}
+.progress-edu .bar {
+    height: 100%;
+    border-radius: 10px;
+    background: linear-gradient(90deg, var(--green) 0%, var(--teal) 100%);
+    transition: width .5s cubic-bezier(.4,0,.2,1);
+}
+
+/* Score / note */
+.score-star  { color: var(--yellow);      font-size: 1.1rem; }
+.score-good  { color: var(--green);       font-weight: 700; }
+.score-warn  { color: var(--amber);       font-weight: 700; }
+.score-fail  { color: var(--red-light);   font-weight: 700; }
+
+/* Carte cours */
+.card-course {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.card-course:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 166, 99, 0.15);
+    border-color: var(--green);
+}
+
+/* Ligne de séparation stylée (Dégradé National 237 subtil) */
+.divider-edu {
+    border: none;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--green), var(--yellow), var(--red), transparent);
+    opacity: .35;
+    margin: 1.5rem 0;
+}
