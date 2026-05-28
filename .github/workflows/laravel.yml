@@ -40,15 +40,16 @@ jobs:
       - name: "📥 Installation Dépendances (Composer)"
         working-directory: ./Backend
         run: |
-          echo "🚀 Démarrage de l'installation Composer..."
+          echo "🚀 [START] Démarrage de l'installation Composer..."
           composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
-          echo "✅ Dépendances installées."
+          echo "✅ [SUCCESS] Dépendances installées avec succès."
 
       - name: "✨ Vérification Clean Code (Pint)"
         working-directory: ./Backend
         run: |
-          echo "🧐 Analyse du style de code avec Laravel Pint..."
+          echo "🧐 [CHECK] Analyse du style de code avec Laravel Pint..."
           ./vendor/bin/pint --test
+          echo "👀 [INFO] Fin de l'analyse Pint."
         continue-on-error: true
 
       - name: "🧪 Exécution des Tests"
@@ -60,11 +61,12 @@ jobs:
           DB_DATABASE: laravel_test
           DB_USERNAME: root
         run: |
+          echo "📋 [SETUP] Copie des fichiers d'environnement..."
           cp .env.example .env
           php artisan key:generate
-          echo "🏃 Lancement des tests unitaires et feature..."
+          echo "🏃 [RUN] Lancement des tests unitaires et feature..."
           php artisan test
-          echo "✅ Tests terminés."
+          echo "✅ [SUCCESS] Exécution des tests terminée."
 
       - name: "🛡️ Scan SonarCloud"
         uses: sonarsource/sonarqube-scan-action@v3
@@ -91,11 +93,11 @@ jobs:
       - name: "🏗️ Build Vite"
         working-directory: ./Frontend
         run: |
-          echo "📦 Installation des modules npm..."
+          echo "📦 [START] Installation des modules npm..."
           npm install
-          echo "🛠️ Lancement du Build de production..."
+          echo "🛠️ [BUILD] Lancement du Build de production..."
           npm run build
-          echo "📂 Structure du dossier dist :"
+          echo "📂 [EXPLORE] Structure finale du dossier dist :"
           ls -R dist/
 
       - name: "📤 Archivage du Build"
@@ -147,13 +149,23 @@ jobs:
           name: frontend-dist
           path: ./dist-frontend
 
+      - name: "🔍 Debug & Diagnostic Réseau avant Déploiement"
+        run: |
+          echo "🔍 [DIAGNOSTIC] Vérification des variables secrètes..."
+          if [ -z "${{ secrets.FTP_SERVER }}" ]; then echo "❌ Erreur: FTP_SERVER est vide !"; else echo "✔ FTP_SERVER est configuré."; fi
+          if [ -z "${{ secrets.FTP_USERNAME }}" ]; then echo "❌ Erreur: FTP_USERNAME est vide !"; else echo "✔ FTP_USERNAME est configuré."; fi
+          
+          echo "🌐 [NETWORK] Test de communication avec le serveur FTP..."
+          echo "Tentative de ping/nc vers le serveur principal..."
+          nc -zv -w 5 ${{ secrets.FTP_SERVER }} 21 || echo "⚠️ Impossible de joindre le port 21. Le pare-feu o2switch bloque sûrement l'IP de GitHub !"
+
       - name: "🚀 Déploiement Backend via FTP"
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          # On déploie directement dans les sous-dossiers du compte projetExchaPay
+          port: 21
           local-dir: ./Backend/
           server-dir: Backend_Code/
           exclude: |
@@ -167,15 +179,13 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
+          port: 21
           local-dir: ./dist-frontend/
           server-dir: Frontend_Public/
 
       - name: "✨ Logs de fin"
         run: |
-          echo "✅ Déploiement FTP terminé avec succès !!!!!"
-          echo "🔗 URL : https://edusmart.cdwfs.net"
-          echo "🕒 Heure : $(date)"
-          echo "🆔 Commit : ${{ github.sha }}"
-
-
-# 
+          echo "🏁 [FINISH] Déploiement FTP exécuté avec succès !"
+          echo "🔗 URL de l'application : https://edusmart.cdwfs.net"
+          echo "🕒 Horodatage : $(date)"
+          echo "🆔 Version SHA Commit : ${{ github.sha }}"
