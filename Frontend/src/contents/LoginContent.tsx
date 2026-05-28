@@ -188,7 +188,6 @@ export default function LoginContent() {
         {/* Ligne de séparation stylée avec marges réduites */}
         <div className="divider-edu my-3"></div>
 
-        {/* Pied de carte */}
         {/* <div className="text-center" data-aos="fade-in" data-aos-delay="1000">
           <p className="small mb-0" style={{ color: 'var(--gray)', fontSize: '0.85rem' }}>
             Pas encore de compte ? 
