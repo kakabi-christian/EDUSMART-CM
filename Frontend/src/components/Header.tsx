@@ -29,10 +29,10 @@ const Header: React.FC = () => {
         </ul>
 
         <div className="nav-cta">
-          <Link to="/login" className="login-link">Connexion</Link>
-          <Link to="/register" className="btn-primary-gradient">
+          <Link to="/login" className="login-link btn-primary-gradient">Connexion</Link>
+          {/* <Link to="/register" className="btn-primary-gradient">
             S'inscrire
-          </Link>
+          </Link> */}
 
           <button
             type="button"
