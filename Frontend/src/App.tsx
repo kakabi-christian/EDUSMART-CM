@@ -5,6 +5,7 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import VerifyOtp from './pages/Verify-otp';
 import HowItWork from './pages/HowItWork';
+import Contact from './pages/Contact';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="#" element={<VerifyOtp />} />
           <Route path="/login" element={<Login />} />
           <Route path="/how-it-work" element={<HowItWork />} />
+          <Route path="/contact" element={<Contact />} />
           
           
         </Routes>
