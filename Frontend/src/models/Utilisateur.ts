@@ -1,65 +1,97 @@
-import type { Role } from './Role';
+/**
+ * Les 4 rôles officiels définis dans la base de données EDUSMART
+ */
+export type UserRole = 'minesec' | 'chef_etablissement' | 'enseignant' | 'eleve_parent';
 
 /**
- * Interface pour l'inscription d'un utilisateur standard
+ * Payload pour l'Étape 1 de la connexion (Demande de l'OTP)
  */
-export interface UserRegistration {
-  lastname: string;             // Nom 👤
-  firstname: string;            // Prénom 👤
-  email: string;                // Email 📧
-  telephone: string;            // Téléphone (format international) 📱
-  country: string;              // Nom complet du pays (ex: Cameroun) 🌍
-  country_code: string;         // Code ISO 2 lettres (ex: CM) 🆔
-  password: string;             // Mot de passe 🔑
-  password_confirmation: string; // Confirmation pour la validation Laravel ✅
+export interface LoginPayloadStep1 {
+  login: string;    // Peut être l'email, le téléphone ou le matricule 🔑
+  password: string; // Mot de passe initial
 }
 
 /**
- * Interface principale de l'utilisateur
+ * Payload pour l'Étape 2 de la connexion (Validation de l'OTP)
+ */
+export interface LoginPayloadStep2 {
+  login: string;
+  two_factor_code: string; // Le code à 6 chiffres reçu par mail 📧
+}
+
+/**
+ * Payload pour la mise à jour du profil
+ */
+export interface UpdateProfilePayload {
+  nom: string;
+  prenom: string;
+  email: string;
+  telephone: string;
+}
+
+/**
+ * Payload pour le changement de mot de passe
+ */
+export interface ChangePasswordPayload {
+  current_password: string;
+  new_password: string;
+  new_password_confirmation: string;
+}
+
+/**
+ * Structure de l'utilisateur connecté renvoyée par l'API
+ */
+export interface AuthenticatedUser {
+  id: number;
+  nom: string;
+  prenom: string | null;
+  role: UserRole;
+  etablissement_id: number | null;
+  email: string | null;
+  telephone: string | null;
+  matricule: string | null;
+}
+
+/**
+ * Interface globale pour un utilisateur complet (EDUSMART)
  */
 export interface User {
-  user_id: number;
-  lastname: string;
-  firstname: string;
-  email: string;
-  type: 'user' | 'admin';
-  telephone: string;
-  country: string;
-  country_code: string;         // Ajouté pour la cohérence globale
-  isactive: boolean;
-  isverified: boolean;
-  lastlogin?: string;
+  id: number;
+  etablissement_id: number | null;
+  nom: string;
+  prenom: string | null;
+  matricule: string | null;
+  email: string | null;
+  telephone: string | null;
+  role: UserRole;
+  derniere_synchro_at?: string | null;
   created_at?: string;
-  roles?: Role[];
+  updated_at?: string;
 }
 
 /**
- * Payloads pour les actions administratives (Collaborateurs)
+ * Réponse de l'API lors d'une authentification réussie
  */
-export interface CreateCollaboratorPayload {
-  lastname: string;
-  firstname: string;
-  email: string;
-  telephone: string;
-  country: string;
-  country_code: string;         // Obligatoire pour la création
-  role_id: number;
-  isactive: boolean;
-}
-
-export interface UpdateCollaboratorPayload extends Partial<CreateCollaboratorPayload> {
-  // Les champs deviennent optionnels pour les mises à jour (PATCH)
+export interface AuthResponse {
+  success: boolean;
+  message: string;
+  step?: number;
+  access_token?: string;
+  token_type?: string;
+  user?: AuthenticatedUser;
 }
 
 /**
- * Interface de pagination standard (Laravel Resource Collection)
+ * Interface de pagination standardisée (Laravel Resource pour EDUSMART)
  */
-export interface PaginatedAdmins {
-  data: User[];
-  current_page: number;
-  last_page: number;
-  per_page: number;
-  total: number;
-  from: number;
-  to: number;
+export interface PaginatedResponse<T> {
+  success: boolean;
+  message: string;
+  data: T[];
+  meta: {
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
+  };
 }

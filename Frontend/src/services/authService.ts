@@ -1,42 +1,32 @@
 import api from './api';
-import type { User, UserRegistration } from '../models/Utilisateur';
-// Interface pour la réponse typique du backend
-interface AuthResponse {
-  status: string;
-  message: string;
-  user: User;
-  access_token?: string;
-  token_type?: string;
-}
+import type { 
+  LoginPayloadStep1, 
+  LoginPayloadStep2, 
+  AuthResponse,
+  UpdateProfilePayload,
+  ChangePasswordPayload,
+  User // Ajout pour le typage des membres
+} from '../models/Utilisateur';
 
 export const authService = {
   
   /**
-   * 1. Inscription (Register) 📝
-   * Envoie les données vers POST /api/register
+   * 🔑 Étape 1 : Connexion initiale
    */
-  register: async (userData: UserRegistration): Promise<AuthResponse> => {
-    const response = await api.post<AuthResponse>('/register', userData);
+  login: async (credentials: LoginPayloadStep1): Promise<AuthResponse> => {
+    const response = await api.post<AuthResponse>('/login', credentials);
     return response.data;
   },
 
   /**
-   * 2. Connexion (Login) 🔑
-   * Envoie l'email et le password vers POST /api/login
+   * 🛡️ Étape 2 : Validation du code OTP
    */
-  /**
-   * 2. Connexion (Login) 🔑
-   */
-  login: async (credentials: Pick<UserRegistration, 'email' | 'password'>): Promise<AuthResponse> => {
-    const response = await api.post<AuthResponse>('/login', credentials);
+  verifyOtp: async (payload: LoginPayloadStep2): Promise<AuthResponse> => {
+    const response = await api.post<AuthResponse>('/login', payload);
     
-    // 💾 Stockage du Token
     if (response.data.access_token) {
       localStorage.setItem('auth_token', response.data.access_token);
     }
-
-    // 👤 NOUVEAU : Stockage des données utilisateur
-    // On transforme l'objet user en chaîne JSON pour le localStorage
     if (response.data.user) {
       localStorage.setItem('user_data', JSON.stringify(response.data.user));
     }
@@ -45,23 +35,89 @@ export const authService = {
   },
 
   /**
-   * 3. Déconnexion (Logout) 🚪
+   * 👤 Récupérer le profil complet depuis l'API
    */
-  logout: async () => {
-    try {
-      await api.post('/logout');
-    } finally {
-      // On nettoie TOUT, même si la requête API échoue
-      localStorage.removeItem('auth_token');
-      localStorage.removeItem('user_data'); // On nettoie aussi le user_data
+  getProfile: async () => {
+    const response = await api.get('/profile');
+    if (response.data.user) {
+      localStorage.setItem('user_data', JSON.stringify(response.data.user));
     }
+    return response.data;
   },
 
   /**
-   * 4. Vérification OTP 🛡️
+   * ✏️ Mettre à jour les informations du profil
    */
-  verifyOtp: async (email: string, otp: string) => {
-    const response = await api.post('/verify-otp', { email, otp });
+  updateProfile: async (payload: UpdateProfilePayload) => {
+    const response = await api.put('/profile/update', payload);
+    if (response.data.user) {
+      localStorage.setItem('user_data', JSON.stringify(response.data.user));
+    }
     return response.data;
+  },
+
+  /**
+   * 🔐 Changer le mot de passe
+   */
+  changePassword: async (payload: ChangePasswordPayload) => {
+    const response = await api.put('/profile/password', payload);
+    return response.data;
+  },
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // GESTION DES MEMBRES DU GROUPE MINESEC
+  // ─────────────────────────────────────────────────────────────────────────
+
+  /**
+   * 📋 Lister les membres MINESEC (avec pagination)
+   */
+  listMinesecMembers: async (page: number = 1) => {
+    const response = await api.get(`/minesec/members?page=${page}`);
+    return response.data;
+  },
+
+  /**
+   * ➕ Créer un nouveau membre MINESEC
+   */
+  createMinesecMember: async (payload: { nom: string, prenom?: string, email: string, telephone?: string }) => {
+    const response = await api.post('/minesec/members', payload);
+    return response.data;
+  },
+
+  /**
+   * 🗑️ Supprimer un membre MINESEC
+   */
+  deleteMinesecMember: async (id: number) => {
+    const response = await api.delete(`/minesec/members/${id}`);
+    return response.data;
+  },
+  updateMinesecMember: async (id: number, payload: any) => {
+    const response = await api.put(`/minesec/members/${id}`, payload);
+    return response.data;
+  },
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // UTILITAIRES
+  // ─────────────────────────────────────────────────────────────────────────
+
+  /**
+   * 🚪 Déconnexion
+   */
+  logout: async (): Promise<void> => {
+    try {
+      await api.post('/logout');
+    } finally {
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('user_data');
+    }
+  },
+
+  getCurrentUser: () => {
+    const user = localStorage.getItem('user_data');
+    return user ? JSON.parse(user) : null;
+  },
+
+  isAuthenticated: (): boolean => {
+    return !!localStorage.getItem('auth_token');
   }
 };
