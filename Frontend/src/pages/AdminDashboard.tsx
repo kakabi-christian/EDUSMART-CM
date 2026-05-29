@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from '../contents/Sidebar';
-import TopBarAdmin from '../components/TopBarAdmin';
 const AdminDashboard: React.FC = () => {
     // État pour la réduction de la sidebar admin
     const [isCollapsed, setIsCollapsed] = useState(true);
@@ -24,9 +23,7 @@ const AdminDashboard: React.FC = () => {
                     overflowX: 'hidden'
                 }}
             >
-                {/* TOPBAR (Toujours visible en haut) */}
-                <TopBarAdmin />
-
+               
                 {/* CONTENU DYNAMIQUE DES PAGES ADMIN */}
                 <main className="p-4 flex-grow-1">
                     {/* Petit badge pour indiquer qu'on est en mode Admin */}
@@ -44,7 +41,7 @@ const AdminDashboard: React.FC = () => {
 
                 {/* Footer Admin */}
                 <footer className="px-4 py-3 text-center" style={{ fontSize: '0.85rem', color: 'var(--gray)' }}>
-                    &copy; {new Date().getFullYear()} <strong>ExchaPay Admin</strong> — Panel de gestion sécurisé.
+                    &copy; {new Date().getFullYear()} <strong>EDUSMART Admin</strong> — Panel de gestion sécurisé.
                 </footer>
             </div>
 

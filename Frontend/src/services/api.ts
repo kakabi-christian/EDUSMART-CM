@@ -1,8 +1,5 @@
 import axios, { type InternalAxiosRequestConfig } from 'axios';
-/**
- * 💡 Note : En production, VITE_API_BASE_URL doit être "https://talla.cdwfs.net"
- * sans le slash final.
- */
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
 const api = axios.create({

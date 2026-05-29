@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { authService } from "../services/authService";
-import { MdEmail, MdLock, MdArrowForward, MdErrorOutline, MdCheckCircleOutline } from "react-icons/md";
+import { MdEmail, MdLock, MdArrowForward, MdErrorOutline, MdCheckCircleOutline, MdSecurity } from "react-icons/md";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import "../styles/LoginContent.css"; 
@@ -14,9 +14,13 @@ export default function LoginContent() {
   const navigate = useNavigate();
   const location = useLocation();
   
+  // Étape courante du flux de connexion (1 = Identifiants, 2 = Code OTP)
+  const [step, setStep] = useState<1 | 2>(1);
+
   const [formData, setFormData] = useState({
-    email: "",
+    login: "",
     password: "",
+    two_factor_code: "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -46,26 +50,41 @@ export default function LoginContent() {
     setMessage(null);
 
     try {
-      const response = await authService.login(formData);
-      
-      // Gestion des redirections selon les rôles du projet Edusmart
-      if (response.user.type === 'admin') {
-        navigate("/admin/dashboard");
-      } else if(response.user.type === 'user') {
-        navigate("/user/dashboard");
+      if (step === 1) {
+        // ─────────────────────────────────────────────────────────────────────
+        // ÉTAPE 1 : Soumission Identifiant + Mot de passe
+        // ─────────────────────────────────────────────────────────────────────
+        const response = await authService.login({
+          login: formData.login,
+          password: formData.password
+        });
+
+        if (response.step === 2) {
+          setMessage({ type: "success", text: response.message });
+          setStep(2); // Bascule l'interface sur le champ OTP
+        }
+      } else {
+        // ─────────────────────────────────────────────────────────────────────
+        // ÉTAPE 2 : Soumission du code de vérification OTP
+        // ─────────────────────────────────────────────────────────────────────
+        const response = await authService.verifyOtp({
+          login: formData.login,
+          two_factor_code: formData.two_factor_code
+        });
+
+        if (response.success && response.user) {
+          // Gestion des redirections selon les rôles officiels EDUSMART
+          if (response.user.role === 'minesec') {
+            navigate("/admin/school");
+          } else {
+            navigate("/user/dashboard");
+          }
+        }
       }
     } catch (error: any) {
-      const status = error.response?.status;
       const data = error.response?.data;
-
-      if (status === 403 && data?.needs_verification) {
-        navigate("/verify-otp", { 
-          state: { email: formData.email, message: data.message } 
-        });
-      } else {
-        const errorMsg = data?.message || "Identifiants incorrects ou problème réseau.";
-        setMessage({ type: "error", text: errorMsg });
-      }
+      const errorMsg = data?.message || "Une erreur est survenue lors de l'authentification.";
+      setMessage({ type: "error", text: errorMsg });
     } finally {
       setLoading(false);
     }
@@ -79,23 +98,29 @@ export default function LoginContent() {
             data-aos="zoom-in-up"
             style={{ maxWidth: '440px', width: '90%', borderColor: 'var(--gray-light)' }}>
         
-        {/* Section Logo & En-tête (Espacements réduits) */}
+        {/* Section Logo & En-tête */}
         <div className="text-center mb-3" data-aos="fade-down" data-aos-delay="200">
           <div className="mb-2">
             <img 
               src={logoEdusmart} 
               alt="Edusmart Logo" 
               className="animate-pulse-icon"
-              style={{ height: '55px', objectFit: 'contain' }} // Logo plus compact
+              style={{ height: '55px', objectFit: 'contain' }}
             />
           </div>
-          <h3 className="fw-bold mb-1 text-shimmer" style={{ fontSize: '1.5rem' }}>Bon retour !</h3>
+          <h3 className="fw-bold mb-1 text-shimmer" style={{ fontSize: '1.5rem' }}>
+            {step === 1 ? "Bon retour !" : "Double facteur"}
+          </h3>
           <p className="small mb-0" style={{ color: 'var(--gray)' }}>
-            Accédez à votre espace d'excellence <span className="fw-bold text-edu-green">Edusmart</span>
+            {step === 1 ? (
+              <>Accédez à votre espace d'excellence <span className="fw-bold text-edu-green">Edusmart</span></>
+            ) : (
+              <>Veuillez valider votre identité pour continuer</>
+            )}
           </p>
         </div>
 
-        {/* Message d'alerte / Notification personnalisé */}
+        {/* Message d'alerte / Notification */}
         {message && (
           <div className={`d-flex align-items-center p-2.5 mb-3 rounded-4`} 
                 data-aos="shake"
@@ -111,58 +136,96 @@ export default function LoginContent() {
           </div>
         )}
 
-        {/* Formulaire de connexion */}
+        {/* Formulaire de connexion dynamique */}
         <form onSubmit={handleSubmit} className="login-form">
-          {/* Champ Email */}
-          <div className="mb-3" data-aos="fade-up" data-aos-delay="400">
-            <label htmlFor="login-email" className="form-label small fw-bold mb-1" style={{ color: 'var(--indigo)', fontSize: '0.8rem' }}>
-              Adresse Email
-            </label>
-            <div className="input-group border rounded-3" style={{ borderColor: 'var(--gray-light)', overflow: 'hidden' }}>
-              <span className="input-group-text border-0 px-3" style={{ backgroundColor: 'rgba(0,0,0,0.03)', color: 'var(--gray)' }}>
-                <MdEmail />
-              </span>
-              <input 
-                id="login-email"
-                type="email" 
-                className="form-control border-0 bg-transparent text-dark fs-6"
-                name="email" 
-                placeholder="votre@email.com" 
-                value={formData.email} 
-                onChange={handleChange} 
-                required 
-                style={{ height: '46px' }} // Hauteur de champ optimisée
-              />
-            </div>
-          </div>
+          
+          {step === 1 ? (
+            <>
+              {/* CHAMP IDENTIFIANT (Email, Téléphone ou Matricule) */}
+              <div className="mb-3" data-aos="fade-up" data-aos-delay="400">
+                <label htmlFor="login-identifiant" className="form-label small fw-bold mb-1" style={{ color: 'var(--indigo)', fontSize: '0.8rem' }}>
+                  Identifiant (Email)
+                </label>
+                <div className="input-group border rounded-3" style={{ borderColor: 'var(--gray-light)', overflow: 'hidden' }}>
+                  <span className="input-group-text border-0 px-3" style={{ backgroundColor: 'rgba(0,0,0,0.03)', color: 'var(--gray)' }}>
+                    <MdEmail />
+                  </span>
+                  <input 
+                    id="login-identifiant"
+                    type="text" 
+                    className="form-control border-0 bg-transparent text-dark fs-6"
+                    name="login" 
+                    placeholder="Ex:christ@gmail.com" 
+                    value={formData.login} 
+                    onChange={handleChange} 
+                    required 
+                    style={{ height: '46px' }}
+                  />
+                </div>
+              </div>
 
-          {/* Champ Mot de passe */}
-          <div className="mb-2" data-aos="fade-up" data-aos-delay="600">
-            <div className="d-flex justify-content-between mb-1">
-              <label htmlFor="login-password" className="form-label small fw-bold mb-0" style={{ color: 'var(--indigo)', fontSize: '0.8rem' }}>
-                Mot de passe
-              </label>
-              <Link to="/forgot-password" className="small fw-bold text-decoration-none text-edu-amber" style={{ fontSize: '0.8rem' }}>
-                Oublié ?
-              </Link>
-            </div>
-            <div className="input-group border rounded-3" style={{ borderColor: 'var(--gray-light)', overflow: 'hidden' }}>
-              <span className="input-group-text border-0 px-3" style={{ backgroundColor: 'rgba(0,0,0,0.03)', color: 'var(--gray)' }}>
-                <MdLock />
-              </span>
-              <input 
-                id="login-password"
-                type="password" 
-                className="form-control border-0 bg-transparent text-dark fs-6"
-                name="password" 
-                placeholder="••••••••" 
-                value={formData.password} 
-                onChange={handleChange} 
-                required 
-                style={{ height: '46px' }} // Hauteur de champ optimisée
-              />
-            </div>
-          </div>
+              {/* CHAMP MOT DE PASSE */}
+              <div className="mb-2" data-aos="fade-up" data-aos-delay="600">
+                <div className="d-flex justify-content-between mb-1">
+                  <label htmlFor="login-password" className="form-label small fw-bold mb-0" style={{ color: 'var(--indigo)', fontSize: '0.8rem' }}>
+                    Mot de passe
+                  </label>
+                </div>
+                <div className="input-group border rounded-3" style={{ borderColor: 'var(--gray-light)', overflow: 'hidden' }}>
+                  <span className="input-group-text border-0 px-3" style={{ backgroundColor: 'rgba(0,0,0,0.03)', color: 'var(--gray)' }}>
+                    <MdLock />
+                  </span>
+                  <input 
+                    id="login-password"
+                    type="password" 
+                    className="form-control border-0 bg-transparent text-dark fs-6"
+                    name="password" 
+                    placeholder="••••••••" 
+                    value={formData.password} 
+                    onChange={handleChange} 
+                    required 
+                    style={{ height: '46px' }}
+                  />
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              {/* CHAMP CODE DE VÉRIFICATION OTP */}
+              <div className="mb-3" data-aos="fade-up" data-aos-delay="400">
+                <label htmlFor="login-otp" className="form-label small fw-bold mb-1" style={{ color: 'var(--indigo)', fontSize: '0.8rem' }}>
+                  Code secret OTP à 6 chiffres
+                </label>
+                <div className="input-group border rounded-3" style={{ borderColor: 'var(--gray-light)', overflow: 'hidden' }}>
+                  <span className="input-group-text border-0 px-3" style={{ backgroundColor: 'rgba(0,0,0,0.03)', color: 'var(--gray)' }}>
+                    <MdSecurity />
+                  </span>
+                  <input 
+                    id="login-otp"
+                    type="text" 
+                    className="form-control border-0 bg-transparent text-dark fs-6 text-center fw-bold letter-spacing-2"
+                    name="two_factor_code" 
+                    placeholder="000000" 
+                    maxLength={6}
+                    value={formData.two_factor_code} 
+                    onChange={handleChange} 
+                    required 
+                    style={{ height: '46px', fontSize: '1.2rem' }}
+                  />
+                </div>
+                <div className="text-end mt-1">
+                  <button 
+                    type="button" 
+                    className="btn btn-link p-0 small fw-bold text-decoration-none text-edu-amber" 
+                    style={{ fontSize: '0.75rem' }}
+                    onClick={() => setStep(1)}
+                  >
+                    Retour aux identifiants
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
 
           {/* Bouton de Soumission */}
           <div data-aos="fade-up" data-aos-delay="800">
@@ -173,30 +236,21 @@ export default function LoginContent() {
               style={{ 
                 fontSize: '0.95rem',
                 height: '48px', 
-                minHeight: '48px' // Bouton un peu moins haut et plus compact
+                minHeight: '48px'
               }}
             >
               {loading ? (
                 <span className="spinner-border spinner-border-sm" style={{ width: '1.1rem', height: '1.1rem' }}></span>
               ) : (
-                <>Se connecter <MdArrowForward /></>
+                <>
+                  {step === 1 ? "Recevoir le code" : "Vérifier et entrer"} <MdArrowForward />
+                </>
               )}
             </button>
           </div>
         </form>
 
-        {/* Ligne de séparation stylée avec marges réduites */}
         <div className="divider-edu my-3"></div>
-
-        {/* <div className="text-center" data-aos="fade-in" data-aos-delay="1000">
-          <p className="small mb-0" style={{ color: 'var(--gray)', fontSize: '0.85rem' }}>
-            Pas encore de compte ? 
-            <Link to="/register" className="ms-1 fw-bold text-decoration-none text-edu-indigo">
-              Inscrivez-vous
-            </Link>
-          </p>
-        </div> */}
-
       </div>
     </div>
   );
