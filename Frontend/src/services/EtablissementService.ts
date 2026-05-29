@@ -24,7 +24,7 @@ export const etablissementService = {
   },
 
   /**
-   * 🔍 2.. Récupérer les détails d'un établissement spécifique par son ID
+   * 🔍 2... Récupérer les détails d'un établissement spécifique par son ID
    */
   getById: async (id: number): Promise<{ success: boolean; message: string; data: Etablissement }> => {
     const response = await api.get<{ success: boolean; message: string; data: Etablissement }>(`/etablissements/${id}`);
