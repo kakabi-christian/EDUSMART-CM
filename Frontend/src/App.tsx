@@ -3,7 +3,6 @@ import Home from './pages/Home';
 import About from './pages/About'; 
 import Register from './pages/Register';
 import Login from './pages/Login';
-import VerifyOtp from './pages/Verify-otp';
 import HowItWork from './pages/HowItWork';
 import School from './pages/admin/School';
 import AdminDashboard from './pages/AdminDashboard';
@@ -19,7 +18,6 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/register" element={<Register />} />
-          <Route path="#" element={<VerifyOtp />} />
           <Route path="/login" element={<Login />} />
           <Route path="/how-it-work" element={<HowItWork />} />
           {/* Routes Admin (avec enfants) */}
