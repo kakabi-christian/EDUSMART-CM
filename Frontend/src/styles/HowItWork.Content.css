@@ -1,32 +1,30 @@
-:root {
-    --excha-green: #00c896;
-    --excha-orange: #ff8c00;
-    --excha-blue: #0a2540;
-    --white-soft: #f8fffe;
-}
+/* ═══════════════════════════════════════════════════════════════════════════
+   HowItWork.Content.css — EDUSMART-CM
+   Thème : Gestion Scolaire · MINESEC Cameroun
+   ═══════════════════════════════════════════════════════════════════════════ */
 
 .how-it-work-wrapper {
-    background-color: var(--white-soft);
+    background-color: #F4FBF7;
     overflow-x: hidden;
 }
 
 /* ---- Section Hero avec Courbe ---- */
 .how-hero {
-    background-color: var(--excha-blue);
+    background: linear-gradient(160deg, #0A2E1E 0%, #007A48 60%, #00A663 100%);
     padding: 140px 0 100px 0;
     clip-path: ellipse(150% 100% at 50% 0%);
 }
 
-.bg-excha-green {
-    background-color: var(--excha-green) !important;
+.bg-edu-green {
+    background-color: var(--green) !important;
 }
 
-.text-excha-orange {
-    color: var(--excha-orange);
+.text-edu-yellow {
+    color: var(--yellow);
 }
 
-.text-excha-blue {
-    color: var(--excha-blue);
+.text-edu-indigo {
+    color: var(--indigo-mid);
 }
 
 /* ---- Timeline des étapes ---- */
@@ -47,9 +45,18 @@
     z-index: 2;
 }
 
-.icon-blue { background: linear-gradient(135deg, #3498db, #1d4ed8); }
-.icon-green { background: linear-gradient(135deg, var(--excha-green), #059669); }
-.icon-orange { background: linear-gradient(135deg, var(--excha-orange), #ea580c); }
+.icon-green { 
+    background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%); 
+}
+.icon-yellow { 
+    background: linear-gradient(135deg, var(--yellow) 0%, var(--amber) 100%); 
+}
+.icon-red { 
+    background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%); 
+}
+.icon-teal { 
+    background: linear-gradient(135deg, var(--teal) 0%, var(--teal-light) 100%); 
+}
 
 .step-item {
     position: relative;
@@ -68,19 +75,21 @@
     top: 65px;
     width: 2px;
     height: calc(100% - 55px);
-    background: rgba(10, 37, 64, 0.1);
+    background: linear-gradient(180deg, var(--green) 0%, var(--yellow) 50%, var(--red) 100%);
+    opacity: 0.3;
     z-index: 1;
 }
 
 /* ---- Box Visuelle (Téléphone) ---- */
 .how-visual-box {
-    border: 1px solid rgba(0,0,0,0.05);
+    border: 1px solid rgba(0, 166, 99, 0.15);
     background: white;
-    transition: box-shadow 0.3s ease;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 .how-visual-box:hover {
-    box-shadow: 0 20px 40px rgba(0,0,0,0.08) !important;
+    box-shadow: 0 20px 40px rgba(0, 166, 99, 0.15) !important;
+    transform: translateY(-5px);
 }
 
 /* ---- Animation Infinie (Bounce) ---- */
@@ -99,17 +108,19 @@
 }
 
 /* ---- Bouton CTA ---- */
-.btn-excha-orange {
-    background-color: var(--excha-orange);
+.btn-edu-primary {
+    background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
     color: white;
     border: none;
     transition: all 0.3s ease;
+    box-shadow: 0 4px 18px rgba(0, 166, 99, 0.3);
 }
 
-.btn-excha-orange:hover {
-    background-color: #e67e22;
+.btn-edu-primary:hover {
+    background: linear-gradient(135deg, var(--green-light) 0%, var(--green) 100%);
     transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(255, 140, 0, 0.3);
+    box-shadow: 0 10px 24px rgba(0, 166, 99, 0.45);
+    color: white;
 }
 
 /* ---- Responsive ---- */
@@ -142,17 +153,6 @@
     .step-text p {
         font-size: 0.9rem;
     }
-}
-.btn-login-submit {
-  transition: all 0.3s ease;
-}
-
-.btn-login-submit:hover:not(:disabled) {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(255, 107, 43, 0.4) !important;
-  background-color: #e85a1e !important;
-}
-
-.btn-login-submit:active {
+}btn-login-submit:active {
   transform: translateY(1px);
 }
